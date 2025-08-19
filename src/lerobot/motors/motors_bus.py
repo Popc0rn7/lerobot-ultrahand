@@ -716,8 +716,39 @@ class MotorsBus(abc.ABC):
 
         return homing_offsets
 
+    def set_zero_turn_homings(self, motors: NameOrID | list[NameOrID] | None = None) -> dict[NameOrID, Value]:
+        """Centre each motor range around its current position.
+
+        The function computes and writes a homing offset such that the present position becomes exactly one
+        half-turn (e.g. `2047` on a 12-bit encoder).
+
+        Args:
+            motors (NameOrID | list[NameOrID] | None, optional): Motors to adjust. Defaults to all motors (`None`).
+
+        Returns:
+            dict[NameOrID, Value]: Mapping *motor → written homing offset*.
+        """
+        if motors is None:
+            motors = list(self.motors)
+        elif isinstance(motors, (str, int)):
+            motors = [motors]
+        elif not isinstance(motors, list):
+            raise TypeError(motors)
+
+        self.reset_calibration(motors)
+        actual_positions = self.sync_read("Present_Position", motors, normalize=False)
+        homing_offsets = self._get_zero_turn_homings(actual_positions)
+        for motor, offset in homing_offsets.items():
+            self.write("Homing_Offset", motor, offset)
+
+        return homing_offsets
+
     @abc.abstractmethod
     def _get_half_turn_homings(self, positions: dict[NameOrID, Value]) -> dict[NameOrID, Value]:
+        pass
+
+    @abc.abstractmethod
+    def _get_zero_turn_homings(self, positions: dict[NameOrID, Value]) -> dict[NameOrID, Value]:
         pass
 
     def record_ranges_of_motion(
