@@ -1,15 +1,21 @@
 from lerobot.teleoperators.ultrahand.gravity_compensation import GravityCompensation
 from lerobot.motors.dynamixel import OperatingMode
 
+import argparse
+
 def main():
     """
     主函数 - 实现重力补偿功能
     """
+    parser = argparse.ArgumentParser(description='manual to this script')
+    parser.add_argument("--port", type=str, default="/dev/ttyUSB0")    # 设置默认值为字符 0，不设置默认值则为 None
+    parser.add_argument("--model_path", type=str, default="src/lerobot/model/uh/uh.urdf")
+    args = parser.parse_args()
+
+    port = args.port
+    model_path = args.model_path
     print("🚀 Ultrahand重力补偿系统")
     print("="*50)
-    # 配置参数
-    port = "/dev/ttyUSB0"  # 根据实际情况调整
-    model_path = "model/uh/uh.urdf"  # URDF模型路径
     
     try:
         # 连接设备

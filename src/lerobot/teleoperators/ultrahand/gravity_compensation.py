@@ -58,7 +58,7 @@ class GravityCompensation:
             # 使用bus的sync_read方法获取位置
             positions_raw = self.ultrahand.bus.sync_read("Present_Position", normalize=False)
             for motor, m in self.ultrahand.bus.motors.items():
-                if (motor in self.ultrahand.zero_offset):
+                if (motor == "shoulder_lift"):
                     positions[m.id-1] = (positions_raw[motor] - 0)/2048*np.pi
                 else:
                     positions[m.id-1] = (positions_raw[motor] - 2048)/2048*np.pi
