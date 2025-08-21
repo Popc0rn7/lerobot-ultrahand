@@ -24,28 +24,20 @@ def main():
         gravity_comp.ultrahand.connect()
         print("✅ 连接成功！")
         
-        # 设置电机操作模式
-        gravity_comp.ultrahand.bus.disable_torque()
-        for motor_name in gravity_comp.ultrahand.bus.motors:
-            gravity_comp.ultrahand.bus.write("Operating_Mode", motor_name, OperatingMode.CURRENT.value)
-            gravity_comp.ultrahand.bus.write("Goal_Current", motor_name, 0)
-        
-        gravity_comp.ultrahand.bus.enable_torque()
-        print("✅ 电机配置完成")
-        
-        # gravity_comp.test_current("elbow", 10)
-        # # 分析零位重力矩
-        # print("\n🔍 分析零位重力矩...")
-        # gravity_comp.analyze_tau()
-        
-        # 询问是否启用连续重力补偿
-        user_input = input("\n是否启用连续重力补偿？(y/n): ")
-        if user_input.lower() == 'y':
-            print("\n🔄 启用连续重力补偿...")
-            print("按 Ctrl+C 停止")
+        option = input("Choose the function to run, g for applying gravity compensation, m for monitoring motor, c for testing current in real time, q for quitting:")
+        if option == "g":
             gravity_comp.run_gravity_compensation_loop(frequency=50.0)
+        elif option == "m":
+            gravity_comp.ultrahand.bus.enable_torque()
+            print("✅ 电机配置完成")
+        elif option == "c":
+            gravity_comp.test_current("elbow", 10)
+        elif option == "q":
+            print("✅ 退出")
+            return
         else:
-            print("✅ 重力补偿演示完成")
+            print("❌ 无效的选项")
+            return
             
     except KeyboardInterrupt:
         print("\n\n🛑 用户中断")

@@ -1,5 +1,7 @@
+import ctypes
+
 def decode_position(pos: int) -> int:
-    return pos
+    return ctypes.c_int32(pos).value
 
 def encode_position(pos: int) -> int:
     return pos

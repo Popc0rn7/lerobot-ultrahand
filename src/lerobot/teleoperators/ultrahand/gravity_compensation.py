@@ -5,6 +5,7 @@ import time
 from lerobot.motors import motors_bus
 from .config_ultrahand import UltrahandConfig
 from .ultrahand import Ultrahand
+from .utils import decode_position
 
 # 导入motors bus相关类
 from lerobot.motors.dynamixel import OperatingMode
@@ -44,6 +45,50 @@ class GravityCompensation:
 
         self.n_joints = self.model.nq
         
+        # 电机状态标志
+        self._motors_enabled = False
+        
+    def enable_motors(self) -> None:
+        """
+        启用所有电机
+        """
+        try:
+            # 设置电机为电流控制模式
+            for motor_name in self.ultrahand.bus.motors:
+                self.ultrahand.bus.write("Operating_Mode", motor_name, OperatingMode.CURRENT.value)
+            
+            # 启用扭矩
+            self.ultrahand.bus.enable_torque()
+            
+            # 设置所有电机目标电流为0
+            zero_currents = np.zeros(self.n_joints)
+            self.ultrahand.bus.sync_write("Goal_Current", zero_currents)
+            
+            self._motors_enabled = True
+            print("✅ 所有电机已启用")
+            
+        except Exception as e:
+            print(f"❌ 启用电机失败: {e}")
+            self._motors_enabled = False
+    
+    def disable_motors(self) -> None:
+        """
+        禁用所有电机
+        """
+        try:
+            # 设置所有电机目标电流为0
+            zero_currents = np.zeros(self.n_joints)
+            self.ultrahand.bus.sync_write("Goal_Current", zero_currents)
+            
+            # 禁用扭矩
+            self.ultrahand.bus.disable_torque()
+            
+            self._motors_enabled = False
+            print("✅ 所有电机已禁用")
+            
+        except Exception as e:
+            print(f"❌ 禁用电机失败: {e}")
+    
     def get_motor_positions(self) -> np.ndarray:
         """
         使用motors bus获取所有电机的当前位置
@@ -58,10 +103,11 @@ class GravityCompensation:
             # 使用bus的sync_read方法获取位置
             positions_raw = self.ultrahand.bus.sync_read("Present_Position", normalize=False)
             for motor, m in self.ultrahand.bus.motors.items():
+                decoded_pos = decode_position(positions_raw[motor])
                 if (motor == "shoulder_lift"):
-                    positions[m.id-1] = (positions_raw[motor] - 0)/2048*np.pi
+                    positions[m.id-1] = (decoded_pos - 0)/2048*np.pi
                 else:
-                    positions[m.id-1] = (positions_raw[motor] - 2048)/2048*np.pi
+                    positions[m.id-1] = (decoded_pos - 2048)/2048*np.pi
                 
             return positions
             
@@ -107,12 +153,13 @@ class GravityCompensation:
         Args:
             tau_gravity: 重力矩数组
         """
+        if not self._motors_enabled:
+            print("⚠️  电机未启用，无法应用重力补偿")
+            return
+            
         try:
             # 将力矩转换为电流值
             compensation_currents = tau_gravity * TORQUE_TO_CURRENT_RATIO
-            
-            # # 确保电流值在合理范围内
-            # compensation_currents = np.clip(compensation_currents, -1000, 1000)
             
             # 将电流值转换为整数
             compensation_currents_int = compensation_currents.astype(int)
@@ -139,6 +186,12 @@ class GravityCompensation:
         print(f"🔄 开始重力补偿控制循环，频率: {frequency} Hz")
         print("按 Ctrl+C 停止")
         
+        # 启用电机
+        self.enable_motors()
+        if not self._motors_enabled:
+            print("❌ 电机启用失败，无法启动控制循环")
+            return
+        
         dt = 1.0 / frequency
         try:
             while True:
@@ -158,12 +211,12 @@ class GravityCompensation:
                     
         except KeyboardInterrupt:
             print("\n\n🛑 重力补偿控制已停止")
-            # 停止所有电机
-            self._stop_all_motors()
+            # 禁用所有电机
+            self.disable_motors()
             print("✅ 所有电机已停止")
         except Exception as e:
             print(f"❌ 重力补偿循环错误: {e}")
-            self._stop_all_motors()
+            self.disable_motors()
     
     def _print_joint_info(self, q: np.ndarray, tau_gravity: np.ndarray) -> None:
         """
@@ -195,7 +248,7 @@ class GravityCompensation:
         except:
             # 如果设置电流失败，尝试禁用扭矩
             try:
-                self.ultrahand. bus.disable_torque()
+                self.ultrahand.bus.disable_torque()
             except:
                 print("⚠️  无法停止电机")
     
@@ -203,20 +256,47 @@ class GravityCompensation:
         """
         分析重力矩
         """
-        while True:
-            q = self.get_motor_positions()
-            tau = self.get_gravity_torque(q)
-            self._print_joint_info(q, tau)
-            time.sleep(1)
+        # 启用电机
+        self.enable_motors()
+        if not self._motors_enabled:
+            print("❌ 电机启用失败，无法进行分析")
+            return
+            
+        try:
+            while True:
+                q = self.get_motor_positions()
+                tau = self.get_gravity_torque(q)
+                self._print_joint_info(q, tau)
+                time.sleep(1)
+        except KeyboardInterrupt:
+            print("\n🛑 分析已停止")
+            self.disable_motors()
+        except Exception as e:
+            print(f"❌ 分析错误: {e}")
+            self.disable_motors()
+            
     def test_current(self, motor: str, current: int) -> None:
         """
         测试电流
         """
-        while True:
-            q = self.get_motor_positions()
-            tau = self.get_gravity_torque(q)
-            self.ultrahand.bus.write("Goal_Current", motor, current)
-            print(f"TAU: {tau[self.ultrahand.bus.motors[motor].id-1]}")
-            print(f"CURRENT: {current}")
-            input("Press Enter to add 1mA...")
-            current += 1
+        # 启用电机
+        self.enable_motors()
+        if not self._motors_enabled:
+            print("❌ 电机启用失败，无法进行测试")
+            return
+            
+        try:
+            while True:
+                q = self.get_motor_positions()
+                tau = self.get_gravity_torque(q)
+                self.ultrahand.bus.write("Goal_Current", motor, current)
+                print(f"TAU: {tau[self.ultrahand.bus.motors[motor].id-1]}")
+                print(f"CURRENT: {current}")
+                input("Press Enter to add 1mA...")
+                current += 1
+        except KeyboardInterrupt:
+            print("\n🛑 测试已停止")
+            self.disable_motors()
+        except Exception as e:
+            print(f"❌ 测试错误: {e}")
+            self.disable_motors()
