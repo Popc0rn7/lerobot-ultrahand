@@ -186,7 +186,7 @@ class GravityCompensation:
         try:
             while True:
                 # 获取当前关节角度
-                q = self.get_motor_positions()
+                q = self.ultrahand.get_motors_position()
 
                 # 计算重力矩
                 tau_gravity = self.get_gravity_torque(q)
@@ -269,7 +269,7 @@ class GravityCompensation:
 
         try:
             while True:
-                q = self.get_motor_positions()
+                q = self.ultrahand.get_motors_position()
                 tau = self.get_gravity_torque(q)
                 self._print_joint_info(q, tau)
 
@@ -283,3 +283,18 @@ class GravityCompensation:
         except Exception as e:
             print(f"❌ 测试错误: {e}")
             self.disable_motors()
+
+    def monitor_motors(self) -> None:
+        """
+        监控电机
+        """
+        self.enable_motors()
+        if not self._motors_enabled:
+            print("❌ 电机启用失败，无法进行监控")
+            return
+
+        while True:
+            q = self.ultrahand.get_motors_position()
+            tau = self.get_gravity_torque(q)
+            self._print_joint_info(q, tau)
+            time.sleep(1)

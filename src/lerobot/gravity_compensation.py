@@ -13,7 +13,7 @@ def main():
         "--port", type=str, default="/dev/ttyUSB0"
     )  # 设置默认值为字符 0，不设置默认值则为 None
     parser.add_argument(
-        "--model_path", type=str, default="src/lerobot/model/uh/uh.urdf"
+        "--model_path", type=str, default="src/lerobot/model/uh-right/uh-right.urdf"
     )
     args = parser.parse_args()
 
@@ -29,17 +29,17 @@ def main():
         gravity_comp.ultrahand.connect()
         print("✅ 连接成功！")
 
-        gravity_comp.study_single_motor("shoulder_lift", 30)
         option = input(
             "Choose the function to run, g for applying gravity compensation, m for monitoring motor, c for testing current in real time, q for quitting:"
         )
         if option == "g":
             gravity_comp.run_gravity_compensation_loop(frequency=50.0)
         elif option == "m":
-            gravity_comp.analyze_tau()
+            gravity_comp.monitor_motors()
             print("✅ 电机配置完成")
         elif option == "c":
-            gravity_comp.test_current([10, -50, 10, 10, 10, 10, 10, 10])
+            gravity_comp.study_single_motor("shoulder_lift", 30)
+            # gravity_comp.test_current([10, -50, 10, 10, 10, 10, 10, 10])
         elif option == "q":
             print("✅ 退出")
             return

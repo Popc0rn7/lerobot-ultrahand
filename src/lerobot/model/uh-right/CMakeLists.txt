@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-project(UH-v3.0 final.SLDASM right)
+project(UH-v3.0 final.SLDASM right v2)
 
 find_package(catkin REQUIRED)
 

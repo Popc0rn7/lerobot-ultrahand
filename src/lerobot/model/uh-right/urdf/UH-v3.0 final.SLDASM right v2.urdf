@@ -3,21 +3,21 @@
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
-  name="UH-v3.0 final.SLDASM right">
+  name="UH-v3.0 final.SLDASM right v2">
   <link
     name="base_link">
     <inertial>
       <origin
-        xyz="-0.00561237713648539 -0.00649825664579372 -0.0124886395093204"
+        xyz="0.0056123771364854 0.00649825664579362 0.0124893822394179"
         rpy="0 0 0" />
       <mass
         value="0.192970315600193" />
       <inertia
         ixx="0.000108537349210273"
-        ixy="-1.5187282103668E-07"
-        ixz="-2.27831404344553E-08"
+        ixy="-1.51872821036693E-07"
+        ixz="-2.0025978201521E-08"
         iyy="0.000130879701084588"
-        iyz="8.40191538937095E-11"
+        iyz="-8.40191538936318E-11"
         izz="0.000218823485546675" />
     </inertial>
     <visual>
@@ -26,12 +26,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/base_link.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+          rgba="1 1 1 1" />
       </material>
     </visual>
     <collision>
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/base_link.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -48,17 +48,17 @@
     name="Link1">
     <inertial>
       <origin
-        xyz="8.09453037325901E-05 -1.09903211080731E-05 0.0500472194620988"
+        xyz="-8.09453037351991E-05 -5.20288063721175E-06 0.0499265705171848"
         rpy="0 0 0" />
       <mass
         value="0.0247648095830755" />
       <inertia
-        ixx="2.63934350117199E-06"
-        ixy="-4.7049558327132E-09"
-        ixz="-6.46232922456025E-08"
-        iyy="2.83034827414882E-06"
-        iyz="-1.32071852497691E-09"
-        izz="1.91165957201145E-06" />
+        ixx="2.63934350117198E-06"
+        ixy="4.53691752492843E-09"
+        ixz="6.51065885822624E-08"
+        iyy="2.83034827414881E-06"
+        iyz="1.32071852497683E-09"
+        izz="1.91165957201144E-06" />
     </inertial>
     <visual>
       <origin
@@ -66,7 +66,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link1.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link1.STL" />
       </geometry>
       <material
         name="">
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link1.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link1.STL" />
       </geometry>
     </collision>
   </link>
@@ -88,14 +88,14 @@
     name="joint1"
     type="revolute">
     <origin
-      xyz="-0.0038974 -0.073 -0.0125"
-      rpy="1.5708 0 0" />
+      xyz="0.0038974 0.073 0.0125"
+      rpy="-1.5708 0 0" />
     <parent
       link="base_link" />
     <child
       link="Link1" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="0"
       upper="0"
@@ -106,16 +106,16 @@
     name="Link2">
     <inertial>
       <origin
-        xyz="0.0501926085488432 -5.13518808678559E-06 -0.022536046928789"
+        xyz="-0.050073529318353 1.08473305191759E-05 -0.0120639530709679"
         rpy="0 0 0" />
       <mass
         value="0.0250912618003005" />
       <inertia
-        ixx="3.54422284036095E-06"
-        ixy="-2.61565647719787E-11"
-        ixz="4.90268790499682E-09"
+        ixx="3.54422284036096E-06"
+        ixy="2.61565600345329E-11"
+        ixz="5.38598418794176E-09"
         iyy="3.14613516997195E-06"
-        iyz="5.99951779801149E-09"
+        iyz="3.2423555596215E-09"
         izz="1.18567717430653E-06" />
     </inertial>
     <visual>
@@ -124,12 +124,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link2.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link2.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
       </material>
     </visual>
     <collision>
@@ -138,7 +138,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link2.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link2.STL" />
       </geometry>
     </collision>
   </link>
@@ -147,7 +147,7 @@
     type="revolute">
     <origin
       xyz="-0.0173 0 0.068"
-      rpy="-1.5708 0 1.5708" />
+      rpy="1.5708 0 -1.5708" />
     <parent
       link="Link1" />
     <child
@@ -164,17 +164,17 @@
     name="Link3">
     <inertial>
       <origin
-        xyz="0.000465712730661269 7.0611157619721E-05 0.098008924985185"
+        xyz="0.000465712730662187 5.59566534354128E-05 0.0978997402485848"
         rpy="0 0 0" />
       <mass
         value="0.0273650717145351" />
       <inertia
-        ixx="5.95252288520201E-06"
-        ixy="-2.51404793236614E-08"
-        ixz="-1.02623991686038E-07"
-        iyy="6.13411804142683E-06"
-        iyz="-2.53861598094708E-08"
-        izz="1.94088531281648E-06" />
+        ixx="5.95252288520202E-06"
+        ixy="-1.58986059660229E-08"
+        ixz="-1.02140695349377E-07"
+        iyy="6.13411804142684E-06"
+        iyz="-2.53861598094826E-08"
+        izz="1.94088531281649E-06" />
     </inertial>
     <visual>
       <origin
@@ -182,7 +182,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link3.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link3.STL" />
       </geometry>
       <material
         name="">
@@ -196,7 +196,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link3.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link3.STL" />
       </geometry>
     </collision>
   </link>
@@ -204,14 +204,14 @@
     name="joint3"
     type="revolute">
     <origin
-      xyz="0.075 0 -0.0173"
-      rpy="0 1.5708 0" />
+      xyz="-0.075 0 -0.0173"
+      rpy="0 -1.5708 0" />
     <parent
       link="Link2" />
     <child
       link="Link3" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="0"
       upper="0"
@@ -222,16 +222,16 @@
     name="Link4">
     <inertial>
       <origin
-        xyz="-0.0419896820350397 -0.00127753085812449 -0.0224358318023682"
+        xyz="0.0419896820350376 0.00127199531724956 0.0223771809703008"
         rpy="0 0 0" />
       <mass
         value="0.0258917537291028" />
       <inertia
         ixx="3.82289080194557E-06"
-        ixy="1.76923108080445E-07"
-        ixz="-6.31756065737019E-09"
+        ixy="1.77091146388231E-07"
+        ixz="-3.97111143556555E-09"
         iyy="3.47125324025841E-06"
-        iyz="-6.72291875042889E-10"
+        iyz="6.72291875048199E-10"
         izz="1.53989864986402E-06" />
     </inertial>
     <visual>
@@ -240,7 +240,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link4.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link4.STL" />
       </geometry>
       <material
         name="">
@@ -254,7 +254,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link4.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link4.STL" />
       </geometry>
     </collision>
   </link>
@@ -263,7 +263,7 @@
     type="revolute">
     <origin
       xyz="0.0173 0 0.128"
-      rpy="0 1.5708 0" />
+      rpy="0 -1.5708 0" />
     <parent
       link="Link3" />
     <child
@@ -280,16 +280,16 @@
     name="Link5">
     <inertial>
       <origin
-        xyz="-7.9659279051408E-05 0.00444604569852089 0.0576003426534185"
+        xyz="-7.96592790369994E-05 -5.12021947066121E-06 0.0573305303943935"
         rpy="0 0 0" />
       <mass
         value="0.025164614315877" />
       <inertia
-        ixx="2.82377177669697E-06"
-        ixy="-4.70495583271331E-09"
-        ixz="6.46232922456031E-08"
-        iyy="3.01324807849294E-06"
-        iyz="1.32071852497587E-09"
+        ixx="2.82377177669696E-06"
+        ixy="4.53691752492844E-09"
+        ixz="6.5106588582263E-08"
+        iyy="3.01324807849293E-06"
+        iyz="1.32071852497793E-09"
         izz="1.91425361842378E-06" />
     </inertial>
     <visual>
@@ -298,7 +298,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link5.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link5.STL" />
       </geometry>
       <material
         name="">
@@ -312,7 +312,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link5.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link5.STL" />
       </geometry>
     </collision>
   </link>
@@ -320,14 +320,14 @@
     name="joint5"
     type="revolute">
     <origin
-      xyz="-0.065027 -0.0044352 -0.0173"
-      rpy="0 -1.5708 0" />
+      xyz="0.065178 0 0.0173"
+      rpy="0 1.5708 0" />
     <parent
       link="Link4" />
     <child
       link="Link5" />
     <axis
-      xyz="0 0 -1" />
+      xyz="0 0 1" />
     <limit
       lower="0"
       upper="0"
@@ -338,16 +338,16 @@
     name="Link6">
     <inertial>
       <origin
-        xyz="-0.0615583830137302 -1.05939374422659E-05 -0.0224789208044751"
+        xyz="0.0614420854678283 5.01523036564033E-06 -0.0121210791957616"
         rpy="0 0 0" />
       <mass
         value="0.0256914118358871" />
       <inertia
         ixx="3.54799287343329E-06"
-        ixy="-1.41881743012619E-10"
-        ixz="-5.38598418793813E-09"
+        ixy="1.41881747750438E-10"
+        ixz="-4.90268790499527E-09"
         iyy="3.32687013710215E-06"
-        iyz="-5.99951779801427E-09"
+        iyz="-3.24235555962372E-09"
         izz="1.36858362271785E-06" />
     </inertial>
     <visual>
@@ -356,12 +356,12 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link6.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link6.STL" />
       </geometry>
       <material
         name="">
         <color
-          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
       </material>
     </visual>
     <collision>
@@ -370,7 +370,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link6.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link6.STL" />
       </geometry>
     </collision>
   </link>
@@ -378,8 +378,8 @@
     name="joint6"
     type="revolute">
     <origin
-      xyz="0.0173 0.0044352 0.077151"
-      rpy="0 1.5708 0" />
+      xyz="-0.0173 0 0.077"
+      rpy="0 -1.5708 0" />
     <parent
       link="Link5" />
     <child
@@ -396,17 +396,17 @@
     name="Link7">
     <inertial>
       <origin
-        xyz="-0.0456918776102906 -0.00159180881516716 0.0322192933350766"
+        xyz="-0.0456918749566375 0.00159181302471353 0.0322192924719973"
         rpy="0 0 0" />
       <mass
-        value="0.0603672149333555" />
+        value="0.0603671967995476" />
       <inertia
-        ixx="9.65136533704963E-06"
-        ixy="5.55975997705985E-08"
-        ixz="1.38653144457175E-06"
-        iyy="5.32336306038504E-05"
-        iyz="-3.15142393687124E-08"
-        izz="5.43275113234997E-05" />
+        ixx="9.65136594698836E-06"
+        ixy="-5.55994456047317E-08"
+        ixz="1.38653248702235E-06"
+        iyy="5.323362014346E-05"
+        iyz="3.15149612726217E-08"
+        izz="5.43275002520648E-05" />
     </inertial>
     <visual>
       <origin
@@ -414,7 +414,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link7.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link7.STL" />
       </geometry>
       <material
         name="">
@@ -428,7 +428,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://UH-v3.0 final.SLDASM right/meshes/Link7.STL" />
+          filename="package://UH-v3.0 final.SLDASM right v2/meshes/Link7.STL" />
       </geometry>
     </collision>
   </link>
@@ -436,8 +436,8 @@
     name="joint7"
     type="revolute">
     <origin
-      xyz="-0.09 0 -0.0173"
-      rpy="0 -1.5708 0" />
+      xyz="0.09 0 -0.0173"
+      rpy="0 1.5708 0" />
     <parent
       link="Link6" />
     <child
