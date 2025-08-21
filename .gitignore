@@ -173,3 +173,6 @@ outputs/
 
 # Dev folders
 .cache/*
+
+# MujoCo
+MUJOCO_LOG.TXT

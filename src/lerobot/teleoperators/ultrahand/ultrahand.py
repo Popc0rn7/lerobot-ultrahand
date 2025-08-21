@@ -16,6 +16,7 @@
 
 import logging
 import time
+import numpy as np
 
 from lerobot.errors import DeviceAlreadyConnectedError, DeviceNotConnectedError
 from lerobot.motors import Motor, MotorCalibration, MotorNormMode
@@ -30,6 +31,7 @@ from .config_ultrahand import UltrahandConfig
 
 logger = logging.getLogger(__name__)
 
+
 class Ultrahand(Teleoperator):
     """
     - [Ultrahand](https://github.com/Ultrahand-AI/Ultrahand)
@@ -39,26 +41,42 @@ class Ultrahand(Teleoperator):
     name = "ultrahand"
 
     def __init__(self, config: UltrahandConfig):
-        super().__init__(config)    
+        super().__init__(config)
         self.config = config
         self.bus = DynamixelMotorsBus(
             port=self.config.port,
-            motors = {
+            motors={
                 "shoulder_pan": Motor(1, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "shoulder_lift": Motor(2, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "arm": Motor(3, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "elbow": Motor(4, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "forearm": Motor(5, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "wrist": Motor(6, "xl330-m288", MotorNormMode.RANGE_M100_100),
-                "gripper": Motor(7, "xl330-m288", MotorNormMode.RANGE_0_100),
+                "gripper": Motor(7, "xl330-m288", MotorNormMode.RANGE_M100_100),
             },
             calibration=self.calibration,
         )
 
         self.zero_offset = ["shoulder_lift", "arm", "forearm"]
         self.half_offset = ["shoulder_pan", "elbow", "wrist", "gripper"]
-        self.min_pos = {"shoulder_pan": 0, "shoulder_lift": 0, "arm": 0, "elbow": 1024, "forearm": 0, "wrist": 1024, "gripper": 0}
-        self.max_pos = {"shoulder_pan": 4095, "shoulder_lift": 2047, "arm": 4095, "elbow": 4095, "forearm": 4095, "wrist": 3072, "gripper": 4095}
+        self.min_pos = {
+            "shoulder_pan": 0,
+            "shoulder_lift": 0,
+            "arm": 0,
+            "elbow": 1024,
+            "forearm": 0,
+            "wrist": 1024,
+            "gripper": 0,
+        }
+        self.max_pos = {
+            "shoulder_pan": 4095,
+            "shoulder_lift": 2047,
+            "arm": 4095,
+            "elbow": 4095,
+            "forearm": 4095,
+            "wrist": 3072,
+            "gripper": 4095,
+        }
 
     @property
     def action_features(self) -> dict[str, type]:
@@ -97,14 +115,18 @@ class Ultrahand(Teleoperator):
                 f"Press ENTER to use provided calibration file associated with the id {self.id}, or type 'c' and press ENTER to run calibration: "
             )
             if user_input.strip().lower() != "c":
-                logger.info(f"Writing calibration file associated with the id {self.id} to the motors")
+                logger.info(
+                    f"Writing calibration file associated with the id {self.id} to the motors"
+                )
                 self.bus.write_calibration(self.calibration)
                 return
         logger.info(f"\nRunning calibration of {self}")
         self.bus.disable_torque()
         for motor in self.bus.motors:
-            self.bus.write("Operating_Mode", motor, OperatingMode.EXTENDED_POSITION.value)
-        
+            self.bus.write(
+                "Operating_Mode", motor, OperatingMode.EXTENDED_POSITION.value
+            )
+
         drive_modes = {motor: 0 for motor in self.bus.motors}
 
         input(f"Move {self} to the middle of its range of motion and press ENTER....")
@@ -113,7 +135,9 @@ class Ultrahand(Teleoperator):
         homing_offsets = {**half_homing_offsets, **zero_homing_offsets}
 
         full_turn_motors = ["shoulder_pan", "gripper"]
-        unknown_range_motors = [motor for motor in self.bus.motors if motor not in full_turn_motors]
+        unknown_range_motors = [
+            motor for motor in self.bus.motors if motor not in full_turn_motors
+        ]
         print(
             f"Move all joints except {full_turn_motors} sequentially through their "
             "entire ranges of motion.\nRecording positions. Press ENTER to stop..."
@@ -148,14 +172,18 @@ class Ultrahand(Teleoperator):
                 # can't rotate more than 360 degrees (from 0 to 4095) And some mistake can happen while
                 # assembling the arm, you could end up with a servo with a position 0 or 4095 at a crucial
                 # point
-                self.bus.write("Operating_Mode", motor, OperatingMode.EXTENDED_POSITION.value)
+                self.bus.write(
+                    "Operating_Mode", motor, OperatingMode.EXTENDED_POSITION.value
+                )
 
         # Use 'position control current based' for gripper to be limited by the limit of the current.
         # For the follower gripper, it means it can grasp an object without forcing too much even tho,
         # its goal position is a complete grasp (both gripper fingers are ordered to join and reach a touch).
         # For the leader gripper, it means we can use it as a physical trigger, since we can force with our finger
         # to make it move, and it will move back to its original target position when we release the force.
-        self.bus.write("Operating_Mode", "gripper", OperatingMode.CURRENT_POSITION.value)
+        self.bus.write(
+            "Operating_Mode", "gripper", OperatingMode.CURRENT_POSITION.value
+        )
         # Set gripper's goal pos in current position mode so that we can use it as a trigger.
         self.bus.enable_torque("gripper")
         if self.is_calibrated:
@@ -163,7 +191,9 @@ class Ultrahand(Teleoperator):
 
     def setup_motors(self) -> None:
         for motor in reversed(self.bus.motors):
-            input(f"Connect the controller board to the '{motor}' motor only and press enter.")
+            input(
+                f"Connect the controller board to the '{motor}' motor only and press enter."
+            )
             self.bus.setup_motor(motor)
             print(f"'{motor}' motor id set to {self.bus.motors[motor].id}")
 
@@ -181,7 +211,6 @@ class Ultrahand(Teleoperator):
     def send_feedback(self, feedback: dict[str, float]) -> None:
         # TODO(rcadene, aliberts): Implement force feedback
 
-
         raise NotImplementedError
 
     def disconnect(self) -> None:
@@ -190,3 +219,18 @@ class Ultrahand(Teleoperator):
 
         self.bus.disconnect()
         logger.info(f"{self} disconnected.")
+
+    def get_motors_position(self):
+        positions = np.zeros(len(self.bus.motors))
+
+        # 使用bus的sync_read方法获取位置
+        positions_raw = self.bus.sync_read("Present_Position", normalize=False)
+        for motor, m in self.bus.motors.items():
+            if motor == "shoulder_lift":
+                positions[m.id - 1] = (positions_raw[motor] - 0) / 2048 * np.pi
+            elif motor in self.zero_offset:
+                positions[m.id - 1] = (positions_raw[motor] + 2048) / 2048 * np.pi
+            else:
+                positions[m.id - 1] = (positions_raw[motor] - 2048) / 2048 * np.pi
+
+        return positions
