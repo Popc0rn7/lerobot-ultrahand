@@ -121,6 +121,7 @@ MODEL_ENCODING_TABLE = {
     "xm430-w350": X_SERIES_ENCODINGS_TABLE,
     "xm540-w270": X_SERIES_ENCODINGS_TABLE,
     "xc430-w150": X_SERIES_ENCODINGS_TABLE,
+    "xc330-m288": X_SERIES_ENCODINGS_TABLE,
 }
 
 # {model: model_resolution}
@@ -133,6 +134,7 @@ MODEL_RESOLUTION = {
     "xm430-w350": 4096,
     "xm540-w270": 4096,
     "xc430-w150": 4096,
+    "xc330-m288": 4096,
 }
 
 # {model: model_number}
@@ -144,6 +146,7 @@ MODEL_NUMBER_TABLE = {
     "xm430-w350": 1020,
     "xm540-w270": 1120,
     "xc430-w150": 1070,
+    "xc330-m288": 1240,
 }
 
 # {model: available_operating_modes}
@@ -155,6 +158,7 @@ MODEL_OPERATING_MODES = {
     "xm430-w350": [0, 1, 3, 4, 5, 16],
     "xm540-w270": [0, 1, 3, 4, 5, 16],
     "xc430-w150": [1, 3, 4, 16],
+    "xc330-m288": [0, 1, 3, 4, 5, 16],
 }
 
 MODEL_CONTROL_TABLE = {
@@ -165,6 +169,7 @@ MODEL_CONTROL_TABLE = {
     "xm430-w350": X_SERIES_CONTROL_TABLE,
     "xm540-w270": X_SERIES_CONTROL_TABLE,
     "xc430-w150": X_SERIES_CONTROL_TABLE,
+    "xc330-m288": X_SERIES_CONTROL_TABLE,
 }
 
 MODEL_BAUDRATE_TABLE = {
@@ -175,6 +180,7 @@ MODEL_BAUDRATE_TABLE = {
     "xm430-w350": X_SERIES_BAUDRATE_TABLE,
     "xm540-w270": X_SERIES_BAUDRATE_TABLE,
     "xc430-w150": X_SERIES_BAUDRATE_TABLE,
+    "xc330-m288": X_SERIES_BAUDRATE_TABLE,
 }
 
 AVAILABLE_BAUDRATES = [

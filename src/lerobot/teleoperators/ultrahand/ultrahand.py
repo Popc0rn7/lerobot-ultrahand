@@ -46,8 +46,8 @@ class Ultrahand(Teleoperator):
         self.bus = DynamixelMotorsBus(
             port=self.config.port,
             motors={
-                "shoulder_pan": Motor(1, "xl330-m288", MotorNormMode.RANGE_M100_100),
-                "shoulder_lift": Motor(2, "xl330-m288", MotorNormMode.RANGE_M100_100),
+                "shoulder_pan": Motor(1, "xc330-m288", MotorNormMode.RANGE_M100_100),
+                "shoulder_lift": Motor(2, "xc330-m288", MotorNormMode.RANGE_M100_100),
                 "arm": Motor(3, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "elbow": Motor(4, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "forearm": Motor(5, "xl330-m288", MotorNormMode.RANGE_M100_100),
@@ -226,10 +226,8 @@ class Ultrahand(Teleoperator):
         # 使用bus的sync_read方法获取位置
         positions_raw = self.bus.sync_read("Present_Position", normalize=False)
         for motor, m in self.bus.motors.items():
-            if motor == "shoulder_lift" or motor == "arm":
+            if motor in self.zero_offset:
                 positions[m.id - 1] = (positions_raw[motor] - 0) / 2048 * np.pi
-            elif motor in self.zero_offset:
-                positions[m.id - 1] = (positions_raw[motor] + 2048) / 2048 * np.pi
             else:
                 positions[m.id - 1] = (positions_raw[motor] - 2048) / 2048 * np.pi
 

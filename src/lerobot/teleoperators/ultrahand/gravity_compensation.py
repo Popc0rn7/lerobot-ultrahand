@@ -10,7 +10,15 @@ from lerobot.motors.dynamixel import OperatingMode
 
 
 # 力矩到电流的转换系数
-TOUQUE2CURRENT = [1, 80 / 0.3, 1, 33 / 0.242, 1, 2 / 0.087, 0]
+TOUQUE2CURRENT = [
+    180 / 0.575,
+    120 / 0.4,
+    32 / 0.25,
+    33 / 0.242,
+    0,
+    2 / 0.087,
+    0,
+]
 TOUQUE2CURRENT_OFFSET = [0, 0, 0, 0, 0, 0, 0]
 
 
