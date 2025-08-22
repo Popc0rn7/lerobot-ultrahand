@@ -5,6 +5,7 @@
 ### Base on LeRobot
 
 You should install all the lerobot dependency fist
+For detail, read [lerobot guide](./README-lerobot.md)
 
 Don't forget `pip install -e ".[dynamixel]"`, because we're using dynamixel motors
 
@@ -35,6 +36,7 @@ python -m lerobot.calibrate \
 ```
 
 Make sure the position is the same with the pic
+![zero_position](./media/zero_position.jpg)
 
 ### Control Arm in Sim with Ultrahand
 

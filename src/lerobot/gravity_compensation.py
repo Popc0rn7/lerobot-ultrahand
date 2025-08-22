@@ -38,7 +38,7 @@ def main():
             gravity_comp.monitor_motors()
             print("✅ 电机配置完成")
         elif option == "c":
-            gravity_comp.study_single_motor("shoulder_lift", 30)
+            gravity_comp.study_single_motor("shoulder_pan", 50)
             # gravity_comp.test_current([10, -50, 10, 10, 10, 10, 10, 10])
         elif option == "q":
             print("✅ 退出")
