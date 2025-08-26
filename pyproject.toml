@@ -165,6 +165,8 @@ lerobot-setup-motors="lerobot.setup_motors:main"
 lerobot-teleoperate="lerobot.teleoperate:main"
 lerobot-eval="lerobot.scripts.eval:main"
 lerobot-train="lerobot.scripts.train:main"
+lerobot-gravity-compensation="lerobot.gravity_compensation:main"
+lerobot-simulate="lerobot.simulate:main"
 
 # ---------------- Tool Configurations ----------------
 [tool.setuptools.packages.find]

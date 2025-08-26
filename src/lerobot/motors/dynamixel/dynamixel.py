@@ -257,6 +257,19 @@ class DynamixelMotorsBus(MotorsBus):
 
         return zero_turn_homings
 
+    def _get_max_turn_homings(self, positions: dict[NameOrID, Value]) -> dict[NameOrID, Value]:
+        """
+        On Dynamixel Motors:
+        Present_Position = Actual_Position + Homing_Offset
+        """
+        max_turn_homings = {}
+        for motor, pos in positions.items():
+            model = self._get_motor_model(motor)
+            max_res = self.model_resolution_table[model] - 1
+            max_turn_homings[motor] = max_res - pos
+
+        return max_turn_homings
+
     def _split_into_byte_chunks(self, value: int, length: int) -> list[int]:
         return _split_into_byte_chunks(value, length)
 

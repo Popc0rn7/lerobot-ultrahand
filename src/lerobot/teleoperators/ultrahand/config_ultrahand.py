@@ -17,7 +17,6 @@
 from dataclasses import dataclass
 
 from ..config import TeleoperatorConfig
-from lerobot.motors import Motor, MotorNormMode
 
 
 @TeleoperatorConfig.register_subclass("ultrahand")

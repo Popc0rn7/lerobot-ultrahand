@@ -46,8 +46,8 @@ class Ultrahand(Teleoperator):
         self.bus = DynamixelMotorsBus(
             port=self.config.port,
             motors={
-                "shoulder_pan": Motor(1, "xc330-m288", MotorNormMode.RANGE_M100_100),
-                "shoulder_lift": Motor(2, "xc330-m288", MotorNormMode.RANGE_M100_100),
+                "shoulder_pan": Motor(1, "xl330-m288", MotorNormMode.RANGE_M100_100),
+                "shoulder_lift": Motor(2, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "arm": Motor(3, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "elbow": Motor(4, "xl330-m288", MotorNormMode.RANGE_M100_100),
                 "forearm": Motor(5, "xl330-m288", MotorNormMode.RANGE_M100_100),
@@ -57,24 +57,25 @@ class Ultrahand(Teleoperator):
             calibration=self.calibration,
         )
 
-        self.zero_offset = ["shoulder_lift", "arm", "forearm"]
-        self.half_offset = ["shoulder_pan", "elbow", "wrist", "gripper"]
+        # self.zero_offset = []
+        self.max_offset = ["arm", "forearm"]
+        self.half_offset = ["shoulder_pan", "shoulder_lift", "elbow", "wrist", "gripper"]
         self.min_pos = {
             "shoulder_pan": 0,
-            "shoulder_lift": 0,
+            "shoulder_lift": 2048,
             "arm": 0,
-            "elbow": 1024,
+            "elbow": 0,
             "forearm": 0,
-            "wrist": 1024,
+            "wrist": 2048,
             "gripper": 0,
         }
         self.max_pos = {
             "shoulder_pan": 4095,
-            "shoulder_lift": 2047,
+            "shoulder_lift": 4095,
             "arm": 4095,
             "elbow": 4095,
             "forearm": 4095,
-            "wrist": 3072,
+            "wrist": 4095,
             "gripper": 4095,
         }
 
@@ -131,8 +132,12 @@ class Ultrahand(Teleoperator):
 
         input(f"Move {self} to the middle of its range of motion and press ENTER....")
         half_homing_offsets = self.bus.set_half_turn_homings(self.half_offset)
-        zero_homing_offsets = self.bus.set_zero_turn_homings(self.zero_offset)
-        homing_offsets = {**half_homing_offsets, **zero_homing_offsets}
+        # zero_homing_offsets = self.bus.set_zero_turn_homings(self.zero_offset)
+        max_homing_offsets = self.bus.set_max_turn_homings(self.max_offset)
+        homing_offsets = {
+            **half_homing_offsets,
+            **max_homing_offsets,
+        }
 
         full_turn_motors = ["shoulder_pan", "gripper"]
         unknown_range_motors = [
@@ -142,12 +147,17 @@ class Ultrahand(Teleoperator):
             f"Move all joints except {full_turn_motors} sequentially through their "
             "entire ranges of motion.\nRecording positions. Press ENTER to stop..."
         )
-        # range_mins, range_maxes = self.bus.record_ranges_of_motion(unknown_range_motors)
-        # for motor in full_turn_motors:
-        #     range_mins[motor] = 0
-        #     range_maxes[motor] = 4095
+
         range_mins = self.min_pos
         range_maxes = self.max_pos
+
+        range_mins, range_maxes = self.bus.record_ranges_of_motion(unknown_range_motors)
+        for motor in unknown_range_motors:
+            range_mins[motor] = max(0, range_mins[motor])
+            range_maxes[motor] = min(4095, range_maxes[motor])
+        for motor in full_turn_motors:
+            range_mins[motor] = 0
+            range_maxes[motor] = 4095
 
         self.calibration = {}
         for motor, m in self.bus.motors.items():
@@ -226,8 +236,8 @@ class Ultrahand(Teleoperator):
         # 使用bus的sync_read方法获取位置
         positions_raw = self.bus.sync_read("Present_Position", normalize=False)
         for motor, m in self.bus.motors.items():
-            if motor in self.zero_offset:
-                positions[m.id - 1] = (positions_raw[motor] - 0) / 2048 * np.pi
+            if motor in self.max_offset:
+                positions[m.id - 1] = (positions_raw[motor] - 4095) / 2048 * np.pi
             else:
                 positions[m.id - 1] = (positions_raw[motor] - 2048) / 2048 * np.pi
 
